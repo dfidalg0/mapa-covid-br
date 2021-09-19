@@ -1,45 +1,45 @@
 {
-  "name": "mapa-covid-br",
-  "version": "0.0.1",
-  "description": "Mapa de casos de Síndrome Gripal e COVID-19 no Brasil",
-  "productName": "Mapa COVID-BR",
-  "author": "Diego Fidalgo/Pedro Henrique Freitas",
-  "private": true,
-  "scripts": {
-    "lint": "eslint --ext .js,.vue ./",
-    "test": "echo \"No test specified\" && exit 0"
-  },
-  "dependencies": {
-    "@quasar/extras": "^1.11.0",
-    "axios": "^0.21.4",
-    "core-js": "^3.17.3",
-    "quasar": "^2.1.0"
-  },
-  "devDependencies": {
-    "@babel/eslint-parser": "^7.15.7",
-    "@quasar/app": "^3.1.0",
-    "eslint": "^7.32.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-vue": "^7.18.0",
-    "eslint-webpack-plugin": "^3.0.1"
-  },
-  "browserslist": [
-    "last 10 Chrome versions",
-    "last 10 Firefox versions",
-    "last 4 Edge versions",
-    "last 7 Safari versions",
-    "last 8 Android versions",
-    "last 8 ChromeAndroid versions",
-    "last 8 FirefoxAndroid versions",
-    "last 10 iOS versions",
-    "last 5 Opera versions"
-  ],
-  "engines": {
-    "node": ">= 12.22.1",
-    "npm": ">= 6.13.4",
-    "yarn": ">= 1.21.1"
-  }
+    "name": "mapa-covid-br",
+    "version": "0.0.1",
+    "description": "Mapa de casos de Síndrome Gripal e COVID-19 no Brasil",
+    "productName": "Mapa COVID-BR",
+    "author": "Diego Fidalgo/Pedro Henrique Freitas",
+    "private": true,
+    "scripts": {
+        "lint": "eslint --ext .js,.vue ./",
+        "test": "echo \"No test specified\" && exit 0"
+    },
+    "dependencies": {
+        "@quasar/extras": "^1.11.0",
+        "axios": "^0.21.4",
+        "core-js": "^3.17.3",
+        "quasar": "^2.1.0"
+    },
+    "devDependencies": {
+        "@babel/eslint-parser": "^7.15.7",
+        "@quasar/app": "^3.1.0",
+        "eslint": "^7.32.0",
+        "eslint-config-standard": "^16.0.3",
+        "eslint-plugin-import": "^2.24.2",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^5.1.0",
+        "eslint-plugin-vue": "^7.18.0",
+        "eslint-webpack-plugin": "^3.0.1"
+    },
+    "browserslist": [
+        "last 10 Chrome versions",
+        "last 10 Firefox versions",
+        "last 4 Edge versions",
+        "last 7 Safari versions",
+        "last 8 Android versions",
+        "last 8 ChromeAndroid versions",
+        "last 8 FirefoxAndroid versions",
+        "last 10 iOS versions",
+        "last 5 Opera versions"
+    ],
+    "engines": {
+        "node": ">= 12.22.1",
+        "npm": ">= 6.13.4",
+        "yarn": ">= 1.21.1"
+    }
 }

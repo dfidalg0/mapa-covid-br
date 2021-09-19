@@ -1,36 +1,24 @@
-module.exports = {
-    // https://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy
-    // This option interrupts the configuration hierarchy at this file
-    // Remove this if you have an higher level ESLint config file (it usually happens into a monorepos)
+/**
+ * @type {import('eslint').Linter.Config}
+ */
+const config = {
     root: true,
-
     parserOptions: {
         parser: '@babel/eslint-parser',
-        ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
-        sourceType: 'module' // Allows for the use of imports
+        ecmaVersion: 2018,
+        sourceType: 'module'
     },
-
     env: {
         browser: true
     },
-
-    // Rules order is important, please avoid shuffling them
     extends: [
         'eslint:recommended',
         'plugin:vue/vue3-recommended',
     ],
-
     plugins: [
         'vue',
     ],
     globals: {
-        ga: 'readonly', // Google Analytics
-        cordova: 'readonly',
-        __statics: 'readonly',
-        __QUASAR_SSR__: 'readonly',
-        __QUASAR_SSR_SERVER__: 'readonly',
-        __QUASAR_SSR_CLIENT__: 'readonly',
-        __QUASAR_SSR_PWA__: 'readonly',
         process: 'readonly',
     },
     rules: {
@@ -89,7 +77,6 @@ module.exports = {
         ],
         'comma-style': 'error',
         'comma-spacing': 'error',
-        'camelcase': 'error',
         'eol-last': 'error',
         'arrow-parens': [
             'error',
@@ -97,5 +84,18 @@ module.exports = {
         ],
         'no-lonely-if': 'error',
         'prefer-template': 'error'
-    }
-}
+    },
+    overrides: [
+        {
+            files: ['.eslintrc.js', 'babel.config.js', '.postcssrc.js'],
+            env: {
+                node: true,
+            },
+            parserOptions: {
+                sourceType: 'script',
+            },
+        },
+    ],
+};
+
+module.exports = config;
