@@ -20,6 +20,10 @@ const config = {
     ],
     globals: {
         process: 'readonly',
+        defineProps: 'readonly',
+        defineEmits: 'readonly',
+        defineExpose: 'readonly',
+        H: 'readonly'
     },
     rules: {
         'indent': [
@@ -35,6 +39,8 @@ const config = {
             order: ['script', 'template', 'style'],
         }],
         'vue/no-v-html': 'error',
+        'vue/max-attributes-per-line': 'off',
+        'vue/require-default-prop': 'off',
         'linebreak-style': [
             'error',
             'unix',

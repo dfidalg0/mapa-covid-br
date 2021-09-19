@@ -9,8 +9,9 @@
 /* eslint-env node */
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { configure } = require('quasar/wrappers');
+const { resolve } = require('path');
 
-module.exports = configure(function (ctx) {
+module.exports = configure(() => {
     return {
         // https://v2.quasar.dev/quasar-cli/supporting-ts
         supportTS: false,
@@ -22,7 +23,8 @@ module.exports = configure(function (ctx) {
         // --> boot files are part of "main.js"
         // https://v2.quasar.dev/quasar-cli/boot-files
         boot: [
-            'axios'
+            'axios',
+            'chart',
         ],
 
         // https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -69,6 +71,10 @@ module.exports = configure(function (ctx) {
             chainWebpack (chain) {
                 chain.plugin('eslint-webpack-plugin')
                     .use(ESLintPlugin, [{ extensions: ['js', 'vue'] }]);
+
+                chain.resolve.alias.set(
+                    'utils', resolve(__dirname, 'src/utils')
+                );
             }
         },
 
@@ -84,7 +90,7 @@ module.exports = configure(function (ctx) {
             config: {},
 
             // iconSet: 'material-icons', // Quasar icon set
-            // lang: 'en-US', // Quasar language pack
+            lang: 'pt-BR', // Quasar language pack
 
             // For special cases outside of where the auto-import strategy can have an impact
             // (like functional components as one of the examples),
@@ -100,125 +106,5 @@ module.exports = configure(function (ctx) {
         // animations: 'all', // --- includes all animations
         // https://v2.quasar.dev/options/animations
         animations: [],
-
-        // https://v2.quasar.dev/quasar-cli/developing-ssr/configuring-ssr
-        ssr: {
-            pwa: false,
-
-            // manualStoreHydration: true,
-            // manualPostHydrationTrigger: true,
-
-            prodPort: 3000, // The default port that the production server should use
-            // (gets superseded if process.env.PORT is specified at runtime)
-
-            maxAge: 1000 * 60 * 60 * 24 * 30,
-            // Tell browser when a file from the server should expire from cache (in ms)
-
-            chainWebpackWebserver (chain) {
-                chain.plugin('eslint-webpack-plugin')
-                    .use(ESLintPlugin, [{ extensions: ['js'] }]);
-            },
-
-            middlewares: [
-                ctx.prod ? 'compression' : '',
-                'render' // keep this as last one
-            ]
-        },
-
-        // https://v2.quasar.dev/quasar-cli/developing-pwa/configuring-pwa
-        pwa: {
-            workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
-            workboxOptions: {}, // only for GenerateSW
-
-            // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
-            // if using workbox in InjectManifest mode
-            chainWebpackCustomSW (chain) {
-                chain.plugin('eslint-webpack-plugin')
-                    .use(ESLintPlugin, [{ extensions: ['js'] }]);
-            },
-
-            manifest: {
-                name: 'Mapa COVID-BR',
-                short_name: 'Mapa COVID-BR',
-                description: 'Mapa de casos de Síndrome Gripal e COVID-19 no Brasil',
-                display: 'standalone',
-                orientation: 'portrait',
-                background_color: '#ffffff',
-                theme_color: '#027be3',
-                icons: [
-                    {
-                        src: 'icons/icon-128x128.png',
-                        sizes: '128x128',
-                        type: 'image/png'
-                    },
-                    {
-                        src: 'icons/icon-192x192.png',
-                        sizes: '192x192',
-                        type: 'image/png'
-                    },
-                    {
-                        src: 'icons/icon-256x256.png',
-                        sizes: '256x256',
-                        type: 'image/png'
-                    },
-                    {
-                        src: 'icons/icon-384x384.png',
-                        sizes: '384x384',
-                        type: 'image/png'
-                    },
-                    {
-                        src: 'icons/icon-512x512.png',
-                        sizes: '512x512',
-                        type: 'image/png'
-                    }
-                ]
-            }
-        },
-
-        // Full list of options: https://v2.quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
-        cordova: {
-            // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
-        },
-
-        // Full list of options: https://v2.quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
-        capacitor: {
-            hideSplashscreen: true
-        },
-
-        // Full list of options: https://v2.quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
-        electron: {
-            bundler: 'packager', // 'packager' or 'builder'
-
-            packager: {
-                // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
-
-                // OS X / Mac App Store
-                // appBundleId: '',
-                // appCategoryType: '',
-                // osxSign: '',
-                // protocol: 'myapp://path',
-
-                // Windows only
-                // win32metadata: { ... }
-            },
-
-            builder: {
-                // https://www.electron.build/configuration/configuration
-
-                appId: 'mapa-covid-br'
-            },
-
-            // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-            chainWebpackMain (chain) {
-                chain.plugin('eslint-webpack-plugin')
-                    .use(ESLintPlugin, [{ extensions: ['js'] }]);
-            },
-
-            // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-            chainWebpackPreload (chain) {
-                chain.plugin('eslint-webpack-plugin')
-                    .use(ESLintPlugin, [{ extensions: ['js'] }]);
-            }
-        }
     };
 });

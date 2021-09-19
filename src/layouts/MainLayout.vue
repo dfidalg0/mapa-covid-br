@@ -1,6 +1,15 @@
 <script setup>
 import EssentialLink from 'components/EssentialLink.vue';
 import { useQuasar } from 'quasar';
+import {
+    QLayout, QDrawer, QHeader,
+    QToolbar, QToolbarTitle,
+    QList, QItemLabel, QBtn,
+    QPageContainer
+} from 'quasar';
+import {
+    RouterView
+} from 'vue-router';
 
 const $q = useQuasar();
 
@@ -52,14 +61,10 @@ const essentialLinks = [
 ];
 
 const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer () {
-    leftDrawerOpen.value = !leftDrawerOpen.value;
-}
 </script>
 
 <template>
-    <q-layout view="lHh Lpr lFf">
+    <q-layout view="hHr LpR fff">
         <q-header elevated>
             <q-toolbar>
                 <q-btn
@@ -68,7 +73,7 @@ function toggleLeftDrawer () {
                     round
                     icon="menu"
                     aria-label="Menu"
-                    @click="toggleLeftDrawer"
+                    @click="leftDrawerOpen = !leftDrawerOpen"
                 />
 
                 <q-toolbar-title>
@@ -82,7 +87,8 @@ function toggleLeftDrawer () {
         <q-drawer
             v-model="leftDrawerOpen"
             show-if-above
-            bordered
+            elevated
+            draggable
         >
             <q-list>
                 <q-item-label
