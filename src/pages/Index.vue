@@ -12,7 +12,7 @@ const data = reactive({
     labels: states.map(state => state.name),
     datasets: [
         {
-            label: 'Casos',
+            label: 'Casos de síndrome gripal',
             data: states.map(() => 0),
             backgroundColor: colors.changeAlpha(
                 colors.getPaletteColor('primary'),
@@ -41,9 +41,10 @@ const options = {
 onMounted(() => {
     const numbers = states.map((_, i) => i);
 
-    const order = times(states.length, () => {
-        return numbers.splice(random(0, numbers.length - 1), 1)[0];
-    });
+    const order = times(
+        states.length,
+        () => numbers.splice(random(0, numbers.length - 1), 1)[0]
+    );
 
     for (const index of order) {
         const state = states[index];
@@ -59,7 +60,7 @@ onMounted(() => {
 
 <template>
     <q-page class="row">
-        <div class="col-12 col-md-6 q-pa-lg flex-center column">
+        <div class="col-12 col-md-6 flex-center column q-pa-lg">
             <Map />
         </div>
         <div class="col-12 col-md-6 flex-center column q-pa-lg">
@@ -67,3 +68,9 @@ onMounted(() => {
         </div>
     </q-page>
 </template>
+
+<style scoped lang="scss">
+.column {
+    min-height: calc(100vh - #{$toolbar-min-height});
+}
+</style>

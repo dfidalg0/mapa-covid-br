@@ -15,49 +15,25 @@ const $q = useQuasar();
 
 import { ref } from 'vue';
 
-const essentialLinks = [
+const links = [
     {
-        title: 'Docs',
-        caption: 'quasar.dev',
-        icon: 'school',
-        link: 'https://quasar.dev'
+        title: 'Ministério da Saúde',
+        caption: 'gov.br/saude/',
+        icon: 'mdi-hospital-box-outline',
+        link: 'https://www.gov.br/saude/pt-br'
     },
     {
-        title: 'Github',
-        caption: 'github.com/quasarframework',
-        icon: 'code',
-        link: 'https://github.com/quasarframework'
+        title: 'OpenDataSUS',
+        caption: 'opendatasus.saude.gov.br',
+        icon: 'mdi-chart-scatter-plot',
+        link: 'https://opendatasus.saude.gov.br/'
     },
     {
-        title: 'Discord Chat Channel',
-        caption: 'chat.quasar.dev',
-        icon: 'chat',
-        link: 'https://chat.quasar.dev'
+        title: 'Portal Brasileiro de Dados',
+        caption: 'dados.gov.br',
+        icon: 'mdi-cube-outline',
+        link: 'https://dados.gov.br'
     },
-    {
-        title: 'Forum',
-        caption: 'forum.quasar.dev',
-        icon: 'record_voice_over',
-        link: 'https://forum.quasar.dev'
-    },
-    {
-        title: 'Twitter',
-        caption: '@quasarframework',
-        icon: 'rss_feed',
-        link: 'https://twitter.quasar.dev'
-    },
-    {
-        title: 'Facebook',
-        caption: '@QuasarFramework',
-        icon: 'public',
-        link: 'https://facebook.quasar.dev'
-    },
-    {
-        title: 'Quasar Awesome',
-        caption: 'Community Quasar projects',
-        icon: 'favorite',
-        link: 'https://awesome.quasar.dev'
-    }
 ];
 
 const leftDrawerOpen = ref(false);
@@ -71,7 +47,7 @@ const leftDrawerOpen = ref(false);
                     flat
                     dense
                     round
-                    icon="menu"
+                    icon="mdi-menu"
                     aria-label="Menu"
                     @click="leftDrawerOpen = !leftDrawerOpen"
                 />
@@ -88,17 +64,16 @@ const leftDrawerOpen = ref(false);
             v-model="leftDrawerOpen"
             show-if-above
             elevated
-            draggable
         >
             <q-list>
                 <q-item-label
                     header
                 >
-                    Essential Links
+                    Links auxiliares
                 </q-item-label>
 
                 <EssentialLink
-                    v-for="link in essentialLinks"
+                    v-for="link in links"
                     :key="link.title"
                     v-bind="link"
                 />
