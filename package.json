@@ -15,12 +15,14 @@
         "chart.js": "^3.5.1",
         "core-js": "^3.18.0",
         "lodash-es": "^4.17.21",
-        "quasar": "^2.1.0"
+        "quasar": "^2.1.0",
+        "vue": "^3.2.4"
     },
     "devDependencies": {
         "@babel/eslint-parser": "^7.15.7",
         "@quasar/app": "^3.1.0",
         "@types/heremaps": "^3.1.5",
+        "@types/lodash-es": "^4.17.5",
         "eslint": "^7.32.0",
         "eslint-config-standard": "^16.0.3",
         "eslint-plugin-import": "^2.24.2",

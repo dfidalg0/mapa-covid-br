@@ -6,6 +6,8 @@ import { elastic } from 'boot/axios';
 import { times, random } from 'lodash-es';
 import { colors } from 'quasar';
 import Map from 'components/Map.vue';
+import MapCircle from 'src/components/MapCircle';
+import { platform } from 'utils/here';
 
 /**@type {import('chart.js').ChartData} */
 const data = reactive({
@@ -38,6 +40,8 @@ const options = {
     barPercentage: .85
 };
 
+const circles = reactive([]);
+
 onMounted(() => {
     const numbers = states.map((_, i) => i);
 
@@ -51,9 +55,23 @@ onMounted(() => {
 
         elastic.get(`/${state.acronym.toLowerCase()}/_count`)
             .then(response => response.data.count)
-            .then(count => requestAnimationFrame(
-                () => data.datasets[0].data[index] = count
-            ));
+            .then(count => {
+                requestAnimationFrame(
+                    () => data.datasets[0].data[index] = count
+                );
+
+                platform.getSearchService().geocode({
+                    qq: `country=BR;state=${state.acronym}`,
+                    limit: 1
+                }, ({ items }) => {
+                    const result = items[0];
+
+                    circles.push({
+                        radius: Math.log2(count / 5000) * 10000,
+                        ...result.position,
+                    });
+                });
+            });
     }
 });
 </script>
@@ -61,7 +79,13 @@ onMounted(() => {
 <template>
     <q-page class="row">
         <div class="col-12 col-md-6 flex-center column q-pa-lg">
-            <Map />
+            <Map>
+                <map-circle
+                    v-for="circle in circles"
+                    :key="1000 * circle.lat + circle.lng"
+                    v-bind="circle"
+                />
+            </Map>
         </div>
         <div class="col-12 col-md-6 flex-center column q-pa-lg">
             <Chart type="bar" :data="data" :options="options" />

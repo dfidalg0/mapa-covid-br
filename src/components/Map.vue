@@ -1,20 +1,22 @@
 <script setup>
 import { debounce } from 'quasar';
-import { ref, onMounted } from 'vue';
-import hereApiKey from 'utils/here';
+import { ref, onMounted, provide, toRaw } from 'vue';
+import { MAP_KEY } from 'utils/keys';
+import { platform } from 'utils/here';
 
 /**@type {import('vue').Ref<HTMLDivElement>} */
-const mapRef = ref(null);
+const container = ref();
+
+const layers = platform.createDefaultLayers();
+
+/**@type {import('vue').Ref<H.Map>} */
+const mapRef = ref();
+
+provide(MAP_KEY, () => toRaw(mapRef.value));
 
 onMounted(() => {
-    const platform = new H.service.Platform({
-        apikey: hereApiKey
-    });
-
-    const layers = platform.createDefaultLayers();
-
-    const map = new H.Map(
-        mapRef.value,
+    const map = mapRef.value = new H.Map(
+        container.value,
         layers.vector.normal.map,
         {
             zoom: 4.5,
@@ -33,12 +35,27 @@ onMounted(() => {
 
     new ResizeObserver(debounce(() => {
         map.getViewPort().resize();
-    }, 50)).observe(mapRef.value.parentElement);
+    }, 50)).observe(container.value.parentElement);
+
+    // platform.getSearchService().geocode({
+    //     qq: 'country=BR;state=PI',
+    //     limit: 1
+    // }, result => {
+    //     const state = result.items[0];
+
+    //     console.log(state.position);
+
+    //     const circle = new H.map.Circle(state.position, 10000);
+    //     map.addObject(circle);
+    //     console.log(result);
+    // });
 });
 </script>
 
 <template>
-    <div ref="mapRef" class="map" />
+    <div ref="container" class="map">
+        <slot v-if="mapRef" />
+    </div>
 </template>
 
 <style scoped lang="scss">
