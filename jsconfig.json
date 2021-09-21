@@ -26,10 +26,10 @@
             "boot/*": [
                 "src/boot/*"
             ]
-        }
+        },
     },
     "include": [
-        "src"
+        "src/**/*"
     ],
     "exclude": [
         "**/dist/**",

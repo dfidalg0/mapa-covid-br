@@ -20,6 +20,7 @@
     "devDependencies": {
         "@babel/eslint-parser": "^7.15.7",
         "@quasar/app": "^3.1.0",
+        "@types/heremaps": "^3.1.5",
         "eslint": "^7.32.0",
         "eslint-config-standard": "^16.0.3",
         "eslint-plugin-import": "^2.24.2",

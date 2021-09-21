@@ -1,7 +1,7 @@
 <script setup>
 import { debounce } from 'quasar';
 import { ref, onMounted } from 'vue';
-import hereApiKey from '../utils/here';
+import hereApiKey from 'utils/here';
 
 /**@type {import('vue').Ref<HTMLDivElement>} */
 const mapRef = ref(null);
