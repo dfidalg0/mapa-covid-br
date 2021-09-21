@@ -89,7 +89,8 @@ const config = {
             'as-needed'
         ],
         'no-lonely-if': 'error',
-        'prefer-template': 'error'
+        'prefer-template': 'error',
+        'no-unused-vars': 'warn',
     },
     overrides: [
         {
