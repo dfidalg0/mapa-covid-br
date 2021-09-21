@@ -1,4 +1,5 @@
 <script setup>
+import { debounce } from 'quasar';
 import { ref, onMounted } from 'vue';
 import hereApiKey from '../utils/here';
 
@@ -7,25 +8,43 @@ const mapRef = ref(null);
 
 onMounted(() => {
     const platform = new H.service.Platform({
-        apiKey: hereApiKey
+        apikey: hereApiKey
     });
 
     const layers = platform.createDefaultLayers();
 
-    new H.Map(
+    const map = new H.Map(
         mapRef.value,
         layers.vector.normal.map,
         {
-            zoom: 10,
+            zoom: 4.5,
             center: {
-                lat: 52.5,
-                lng: 13.4
+                lat: -15.3442108,
+                lng: -52.4579526
             }
         }
     );
+
+    H.ui.UI.createDefault(map, layers, 'pt-BR');
+
+    const events = new H.mapevents.MapEvents(map);
+
+    new H.mapevents.Behavior(events);
+
+    new ResizeObserver(debounce(() => {
+        map.getViewPort().resize();
+    }, 50)).observe(mapRef.value.parentElement);
 });
 </script>
 
 <template>
-    <div ref="mapRef" style="width: 100%; height: 100%;" />
+    <div ref="mapRef" class="map" />
 </template>
+
+<style scoped lang="scss">
+.map {
+    width: 100%;
+    height: 100%;
+    box-sizing: initial;
+}
+</style>
