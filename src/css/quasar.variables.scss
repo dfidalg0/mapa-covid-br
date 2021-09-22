@@ -23,8 +23,13 @@ $negative  : #C10015;
 $info      : #31CCEC;
 $warning   : #F2C037;
 
-$breakpoint-xs-max: 599px;
-$breakpoint-sm-max: 959px;
-$breakpoint-md-max: 1263px;
-$breakpoint-lg-max: 1903px;
-$breakpoint-xl-min: 1904px;
+$breakpoint-xs: 599px;
+$breakpoint-sm: 959px;
+$breakpoint-md: 1263px;
+$breakpoint-lg: 1904px;
+
+@mixin md {
+    @media screen and (min-width: $breakpoint-md-min) {
+        @content
+    }
+}

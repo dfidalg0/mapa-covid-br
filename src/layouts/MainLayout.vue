@@ -64,6 +64,7 @@ const leftDrawerOpen = ref(false);
             v-model="leftDrawerOpen"
             show-if-above
             elevated
+            behavior="mobile"
         >
             <q-list>
                 <q-item-label

@@ -1,60 +1,66 @@
 <script setup>
-import { debounce } from 'quasar';
-import { ref, onMounted, provide, toRaw } from 'vue';
-import { MAP_KEY } from 'utils/keys';
-import { platform } from 'utils/here';
+import { debounce, useQuasar } from 'quasar';
+import { ref, provide, onMounted, onUnmounted } from 'vue';
+import { platform, MAP_KEY } from 'utils/here';
 
 /**@type {import('vue').Ref<HTMLDivElement>} */
 const container = ref();
 
-const layers = platform.createDefaultLayers();
+const layers = platform.createDefaultLayers({
+    lg: 'pt-BR'
+});
 
-/**@type {import('vue').Ref<H.Map>} */
-const mapRef = ref();
+/**@type {H.Map} */ let map;
+/**@type {H.ui.UI} */ let ui;
+/**@type {H.mapevents.MapEvents} */ let events;
+/**@type {ResizeObserver} */ let observer;
 
-provide(MAP_KEY, () => toRaw(mapRef.value));
+const mounted = ref(false);
+
+provide(MAP_KEY, () => ({ map, ui, events }));
+
+const $q = useQuasar();
 
 onMounted(() => {
-    const map = mapRef.value = new H.Map(
-        container.value,
-        layers.vector.normal.map,
-        {
-            zoom: 4.5,
-            center: {
-                lat: -15.3442108,
-                lng: -52.4579526
-            }
+    mounted.value = true;
+
+    const isDesktop = $q.screen.gt.md;
+
+    /**@type {H.Map.Options} */
+    const mapOptions = {
+        zoom: isDesktop ? 4.5 : 3.5,
+        center: {
+            lat: -15.3442108,
+            lng: isDesktop ? -73.4579526 : -54.4579526,
         }
-    );
+    };
 
-    H.ui.UI.createDefault(map, layers, 'pt-BR');
+    map = new H.Map(container.value, layers.vector.normal.map, mapOptions);
 
-    const events = new H.mapevents.MapEvents(map);
+    ui = H.ui.UI.createDefault(map, layers, 'pt-BR');
+
+    events = new H.mapevents.MapEvents(map);
 
     new H.mapevents.Behavior(events);
 
-    new ResizeObserver(debounce(() => {
+    observer = new ResizeObserver(debounce(() => {
         map.getViewPort().resize();
-    }, 50)).observe(container.value.parentElement);
+    }, 50));
 
-    // platform.getSearchService().geocode({
-    //     qq: 'country=BR;state=PI',
-    //     limit: 1
-    // }, result => {
-    //     const state = result.items[0];
+    observer.observe(container.value.parentElement);
+});
 
-    //     console.log(state.position);
-
-    //     const circle = new H.map.Circle(state.position, 10000);
-    //     map.addObject(circle);
-    //     console.log(result);
-    // });
+onUnmounted(() => {
+    ui.dispose();
+    events.dispose();
+    map.dispose();
+    observer.disconnect();
 });
 </script>
 
 <template>
     <div ref="container" class="map">
-        <slot v-if="mapRef" />
+        <slot v-if="mounted" />
     </div>
 </template>
 
@@ -62,6 +68,8 @@ onMounted(() => {
 .map {
     width: 100%;
     height: 100%;
-    box-sizing: initial;
+    * {
+        box-sizing: initial;
+    }
 }
 </style>

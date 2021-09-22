@@ -41,6 +41,7 @@ const config = {
         'vue/no-v-html': 'error',
         'vue/max-attributes-per-line': 'off',
         'vue/require-default-prop': 'off',
+        'vue/valid-template-root': 'off',
         'linebreak-style': [
             'error',
             'unix',
