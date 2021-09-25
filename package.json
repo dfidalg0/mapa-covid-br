@@ -29,7 +29,8 @@
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-promise": "^5.1.0",
         "eslint-plugin-vue": "^7.18.0",
-        "eslint-webpack-plugin": "^3.0.1"
+        "eslint-webpack-plugin": "^3.0.1",
+        "vercel": "^23.1.2"
     },
     "browserslist": [
         "last 10 Chrome versions",
