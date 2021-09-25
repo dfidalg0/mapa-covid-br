@@ -34,6 +34,12 @@ const links = [
         icon: 'mdi-cube-outline',
         link: 'https://dados.gov.br'
     },
+    {
+        title: 'Código Fonte',
+        caption: 'diegood12/mapa-covid-br',
+        icon: 'mdi-github',
+        link: 'https://github.com/diegood12/mapa-covid-br'
+    },
 ];
 
 const leftDrawerOpen = ref(false);
@@ -53,7 +59,7 @@ const leftDrawerOpen = ref(false);
                 />
 
                 <q-toolbar-title>
-                    Quasar App
+                    Mapa Covid BR
                 </q-toolbar-title>
 
                 <div>Quasar v{{ $q.version }}</div>
