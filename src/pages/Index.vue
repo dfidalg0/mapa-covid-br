@@ -2,7 +2,7 @@
 import { reactive, onMounted, ref, computed } from 'vue';
 import { elastic } from 'boot/axios';
 import { times, random } from 'lodash-es';
-import { colors, useQuasar, QBtn } from 'quasar';
+import { colors, useQuasar, QBtn, debounce } from 'quasar';
 import states from 'utils/states';
 import Chart from 'components/Chart.vue';
 import Map from 'components/Map.vue';
@@ -14,7 +14,23 @@ const data = reactive({
     labels: states.map(state => state.name),
     datasets: [
         {
-            label: 'Casos de síndrome gripal',
+            label: 'Teste Positivo - COVID-19',
+            data: states.map(() => 0),
+            backgroundColor: colors.changeAlpha(
+                colors.getPaletteColor('accent'),
+                0.75
+            ),
+        },
+        {
+            label: 'Teste Negativo - COVID-19',
+            data: states.map(() => 0),
+            backgroundColor: colors.changeAlpha(
+                colors.getPaletteColor('secondary'),
+                0.75
+            ),
+        },
+        {
+            label: 'Total de Casos - Síndrome Gripal',
             data: states.map(() => 0),
             backgroundColor: colors.changeAlpha(
                 colors.getPaletteColor('primary'),
@@ -69,28 +85,87 @@ onMounted(() => {
         () => numbers.splice(random(0, numbers.length - 1), 1)[0]
     );
 
+    const positive = [];
+    const negative = [];
+
+    const setGraph = debounce(() => {
+        for (const i in positive) {
+            data.datasets[0].data[i] = positive[i];
+            data.datasets[1].data[i] = negative[i];
+            data.datasets[2].data[i] = negative[i] + positive[i];
+        }
+    }, 100);
+
     for (const index of order) {
         const state = states[index];
 
-        elastic.get(`/${state.acronym.toLowerCase()}/_count`)
-            .then(response => response.data.count)
-            .then(count => {
-                requestAnimationFrame(
-                    () => data.datasets[0].data[index] = count
-                );
+        elastic.post(`/${state.acronym.toLowerCase()}/_search`, {
+            size: 0,
+            aggs: {
+                positive: {
+                    filter: {
+                        match: {
+                            resultadoTeste: 'Positivo'
+                        }
+                    }
+                },
+                negative: {
+                    filter: {
+                        match: {
+                            resultadoTeste: 'Negativo'
+                        }
+                    }
+                }
+            }
+        })
+            .then(response => response.data.aggregations)
+            .then(aggs => {
+                positive[index] = aggs.positive.doc_count;
+                negative[index] = aggs.negative.doc_count;
 
-                const formatted = Intl.NumberFormat().format(count);
+                setGraph();
+
+                const count = positive[index] + negative[index];
+
+                const strokeColor = colors.getPaletteColor('primary');
+                const { r, g, b } = colors.hexToRgb(strokeColor);
+                const fillColor = `rgba(${r},${g},${b},0.5)`;
 
                 circles.push({
                     radius: Math.log2(count / 5000) * 10000,
+                    style: {
+                        fillColor, strokeColor
+                    },
                     ...state.position,
-                    onPointerenter() {
+                    onPointerenter(e) {
+                        /**@type {H.Map} */
+                        const map = e.target.getMap();
+
+                        const { offsetX: x, offsetY: y } = e.originalEvent;
+
+                        const { lat, lng } = map.screenToGeo(x, y - 10);
+
+                        const { format } = Intl.NumberFormat();
+
+                        const total = format(count);
+                        const confirmed = format(positive[index]);
+
                         Object.assign(bubble, {
-                            lat: state.position.lat + 1,
-                            lng: state.position.lng,
-                            text: `${state.name}: ${formatted} casos`,
+                            lat, lng,
+                            text: `${state.name}: ${total} casos - ${confirmed} confirmados`,
                             open: true
                         });
+                    },
+                    onPointermove(e) {
+                        /**@type {H.Map} */
+                        const map = e.target.getMap();
+
+                        const { offsetX: x, offsetY: y } = e.originalEvent;
+
+                        const { lat, lng } = map.screenToGeo(x, y - 10);
+
+                        bubble.lat = lat;
+                        bubble.lng = lng;
                     },
                     onPointerleave() {
                         bubble.open = false;
@@ -100,19 +175,17 @@ onMounted(() => {
                         /**@type {H.Map} */
                         const map = e.target.getMap();
 
-                        const {
-                            clientX: x, clientY: y
-                        } = e.originalEvent;
+                        const { x, y } = map.geoToScreen(state.position);
 
-                        const increment = isDesktop.value
-                            ? 0.2 * window.innerWidth
-                            : 0;
+                        const position = map.screenToGeo(x, y);
 
-                        const position = map.screenToGeo(
-                            x - increment, y
-                        );
-
-                        map.setCenter(position, true);
+                        map.getViewModel().setLookAtData({
+                            position,
+                            zoom: 5.9,
+                            tilt: 0,
+                            heading: 180,
+                            incline: 0
+                        }, true);
                     }
                 });
             });
@@ -120,20 +193,14 @@ onMounted(() => {
 });
 
 const showChart = ref(false);
+
+if (isDesktop.value) {
+    setTimeout(() => showChart.value = true, 0);
+}
 </script>
 
 <template>
     <q-page class="main">
-        <Map>
-            <map-circle
-                v-for="circle in circles"
-                :key="1000 * circle.lat + circle.lng"
-                v-bind="circle"
-            />
-            <map-bubble
-                v-bind="bubble"
-            />
-        </Map>
         <div class="chart" :class="{ show: showChart }">
             <q-btn
                 icon="mdi-chevron-left" flat round dense class="toggle"
@@ -141,6 +208,18 @@ const showChart = ref(false);
                 @click="showChart = !showChart"
             />
             <Chart type="bar" :data="data" :options="options" />
+        </div>
+        <div class="map-container">
+            <Map>
+                <map-circle
+                    v-for="circle in circles"
+                    :key="1000 * circle.lat + circle.lng"
+                    v-bind="circle"
+                />
+                <map-bubble
+                    v-bind="bubble"
+                />
+            </Map>
         </div>
     </q-page>
 </template>
@@ -152,6 +231,11 @@ $water-color: #9acdfa;
     height: calc(100vh - #{$toolbar-min-height});
     width: 100vw;
     position: relative;
+}
+
+.map-container {
+    width: 100%;
+    height: 100%;
 }
 
 .chart {
@@ -186,17 +270,11 @@ $water-color: #9acdfa;
     }
 
     @include md {
-        transform: initial;
-
         padding: 20pt 10pt;
-        z-index: initial;
         width: 40%;
+        max-width: 400pt;
         box-shadow: 5px 0 px -3px black;
         background: rgba($water-color, .75);
-
-        .toggle {
-            display: none;
-        }
     }
 }
 </style>

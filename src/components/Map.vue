@@ -28,10 +28,10 @@ onMounted(() => {
 
     /**@type {H.Map.Options} */
     const mapOptions = {
-        zoom: isDesktop ? 4.5 : 3.5,
+        zoom: isDesktop ? 4.9 : 3.5,
         center: {
             lat: -15.3442108,
-            lng: isDesktop ? -73.4579526 : -54.4579526,
+            lng: -54.4579526,
         }
     };
 
@@ -68,7 +68,7 @@ onUnmounted(() => {
 .map {
     width: 100%;
     height: 100%;
-    * {
+    *, *::before, *::after {
         box-sizing: initial;
     }
 }
