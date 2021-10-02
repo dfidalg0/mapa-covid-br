@@ -28,9 +28,12 @@ const bubble = new H.ui.InfoBubble(pick(props, 'lat', 'lng'));
 ui.addBubble(bubble);
 
 watchEffect(() => {
+    bubble.setPosition(pick(props, 'lat', 'lng'));
+});
+
+watchEffect(() => {
     const state = props.open ? 'OPEN' : 'CLOSED';
 
-    bubble.setPosition(pick(props, 'lat', 'lng'));
     bubble.setState(H.ui.InfoBubble.State[state]);
 });
 

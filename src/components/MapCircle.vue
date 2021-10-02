@@ -49,8 +49,17 @@ circle.getMap = () => map;
 
 watchEffect(() => {
     circle.setCenter(pick(props, 'lat', 'lng'));
+});
+
+watchEffect(() => {
     circle.setRadius(props.radius);
+});
+
+watchEffect(() => {
     circle.setStyle(props.style);
+});
+
+watchEffect(() => {
     circle.setVisibility(props.visible);
 });
 
