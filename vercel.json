@@ -3,6 +3,10 @@
         {
             "source": "/elastic/:state/:path*",
             "destination": "https://elasticsearch-saps.saude.gov.br/desc-notificacoes-esusve-:state/:path*"
+        },
+        {
+            "source": "/api/(.*)*",
+            "destination": "/api/index.js"
         }
     ]
 }

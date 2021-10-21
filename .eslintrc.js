@@ -103,6 +103,12 @@ const config = {
                 sourceType: 'script',
             },
         },
+        {
+            files: ['api/**/*', 'lib/**/*'],
+            globals: {
+                __dirname: 'readonly'
+            }
+        }
     ],
 };
 

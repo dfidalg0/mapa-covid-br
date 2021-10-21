@@ -1,15 +1,17 @@
 {
+    "extends": "@quasar/app/tsconfig-preset",
     "compilerOptions": {
         "baseUrl": ".",
+        "esModuleInterop": true,
+        "types": [
+            "quasar"
+        ],
         "paths": {
-            "app/*": [
-                "*"
-            ],
             "src/*": [
                 "src/*"
             ],
-            "utils/*": [
-                "src/utils/*"
+            "app/*": [
+                "*"
             ],
             "components/*": [
                 "src/components/*"
@@ -25,15 +27,19 @@
             ],
             "boot/*": [
                 "src/boot/*"
-            ]
+            ],
+            "utils/*": [
+                "src/utils/*"
+            ],
         },
     },
-    "include": [
-        "src/**/*"
-    ],
     "exclude": [
-        "**/dist/**",
-        "**/.quasar/**",
-        "**/node_modules/**"
+        "/dist",
+        ".quasar",
+        "cypress/**",
+        "node_modules"
+    ],
+    "include": [
+        "src"
     ]
 }
