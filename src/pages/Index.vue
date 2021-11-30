@@ -8,6 +8,7 @@ import Chart from 'components/Chart.vue';
 import Map from 'components/Map.vue';
 import MapCircle from 'components/MapCircle.vue';
 import MapBubble from 'components/MapBubble.vue';
+// import axios from 'axios';
 
 /**@type {import('chart.js').ChartData} */
 const data = reactive({
@@ -87,12 +88,13 @@ onMounted(() => {
 
     const positive = [];
     const negative = [];
+    const total = [];
 
     const setGraph = debounce(() => {
         for (const i in positive) {
             data.datasets[0].data[i] = positive[i];
             data.datasets[1].data[i] = negative[i];
-            data.datasets[2].data[i] = negative[i] + positive[i];
+            data.datasets[2].data[i] = total[i];
         }
     }, 100);
 
@@ -102,6 +104,11 @@ onMounted(() => {
         elastic.post(`/${state.acronym.toLowerCase()}/_search`, {
             size: 0,
             aggs: {
+                total: {
+                    value_count: {
+                        field: '_id'
+                    }
+                },
                 positive: {
                     filter: {
                         match: {
@@ -122,10 +129,9 @@ onMounted(() => {
             .then(aggs => {
                 positive[index] = aggs.positive.doc_count;
                 negative[index] = aggs.negative.doc_count;
+                const count = total[index] = aggs.total.value;
 
                 setGraph();
-
-                const count = positive[index] + negative[index];
 
                 const strokeColor = colors.getPaletteColor('primary');
                 const { r, g, b } = colors.hexToRgb(strokeColor);
@@ -152,7 +158,9 @@ onMounted(() => {
 
                         Object.assign(bubble, {
                             lat, lng,
-                            text: `${state.name}: ${total} casos - ${confirmed} confirmados`,
+                            text:
+                                `${state.name}: ${total} casos - ` +
+                                `${confirmed} testes positivos`,
                             open: true
                         });
                     },
@@ -197,6 +205,37 @@ const showChart = ref(false);
 if (isDesktop.value) {
     setTimeout(() => showChart.value = true, 0);
 }
+
+const handleMapViewChange = debounce(e => {
+    /**@type {H.Map} */
+    const map = e.target;
+
+    // const { lat, lng } = map.getCenter();
+    const zoom = map.getZoom();
+
+    if (process.env.DEV) {
+        console.log(zoom);
+    }
+
+    // if (zoom > 11) {
+    //     axios.get('/api/nearby', {
+    //         params: {
+    //             limit: 30,
+    //             lat, lng
+    //         }
+    //     }).then(r => {
+    //         circles.push(...r.data.items.map(item => {
+    //             const count = item.notifications.total;
+
+    //             return {
+    //                 radius: Math.log2(count / 5000) * 1000,
+    //                 ...item.position
+    //             };
+    //         }));
+    //         console.log(r.data.items);
+    //     });
+    // }
+}, 200);
 </script>
 
 <template>
@@ -210,7 +249,7 @@ if (isDesktop.value) {
             <Chart type="bar" :data="data" :options="options" />
         </div>
         <div class="map-container">
-            <Map>
+            <Map @mapviewchange="handleMapViewChange">
                 <map-circle
                     v-for="circle in circles"
                     :key="1000 * circle.lat + circle.lng"

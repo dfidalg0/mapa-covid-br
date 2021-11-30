@@ -1,7 +1,7 @@
 <script setup>
 import { debounce, useQuasar } from 'quasar';
 import { ref, provide, onMounted, onUnmounted } from 'vue';
-import { platform, MAP_KEY } from 'utils/here';
+import { platform, MAP_KEY, events as eventsList, useEvents } from 'utils/here';
 
 /**@type {import('vue').Ref<HTMLDivElement>} */
 const container = ref();
@@ -9,6 +9,8 @@ const container = ref();
 const layers = platform.createDefaultLayers({
     lg: 'pt-BR'
 });
+
+const emit = defineEmits([...eventsList, 'mapviewchange']);
 
 /**@type {H.Map} */ let map;
 /**@type {H.ui.UI} */ let ui;
@@ -48,6 +50,10 @@ onMounted(() => {
     }, 50));
 
     observer.observe(container.value.parentElement);
+
+    useEvents(map, emit);
+
+    map.addEventListener('mapviewchange', e => emit('mapviewchange', e));
 });
 
 onUnmounted(() => {
