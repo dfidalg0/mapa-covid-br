@@ -41,5 +41,8 @@
     ],
     "include": [
         "src"
-    ]
+    ],
+    "typeAcquisition": {
+        "exclude": ["crc-32", "defer-to-connect"]
+    }
 }
