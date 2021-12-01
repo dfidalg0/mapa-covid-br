@@ -1,4 +1,10 @@
+## Exame CSI-02
+
+Alunos: Diego Fidalgo e Pedro Freitas
+
 API de consulta aos dados de síndrome gripal no Brasil com base em informações de geolocalização
+
+Esse projeto foi realizado em JavaScript, com o uso dos frameworks Vue.js, Quasar e Chart.js. O lançamento da plataforma foi feito com o uso de Vercel.
 
 API's auxiliares:
 
