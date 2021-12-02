@@ -40,6 +40,12 @@ const links = [
         icon: 'mdi-github',
         link: 'https://github.com/diegood12/mapa-covid-br'
     },
+    {
+        title: 'API',
+        caption: '/api/docs',
+        icon: 'mdi-api',
+        link: 'https://mapa-covid-br.vercel.app/api/docs/static/index.html'
+    },
 ];
 
 const leftDrawerOpen = ref(false);
