@@ -2,7 +2,7 @@
     "rewrites": [
         {
             "source": "/elastic/:state/:path*",
-            "destination": "https://elasticsearch-saps.saude.gov.br/desc-notificacoes-esusve-:state/:path*"
+            "destination": "https://elasticsearch-saps.saude.gov.br/desc-esus-notifica-estado-:state/:path*"
         },
         {
             "source": "/api/(.*)*",
