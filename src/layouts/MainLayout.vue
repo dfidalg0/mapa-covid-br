@@ -36,9 +36,9 @@ const links = [
     },
     {
         title: 'Código Fonte',
-        caption: 'diegood12/mapa-covid-br',
+        caption: 'dfidalg0/mapa-covid-br',
         icon: 'mdi-github',
-        link: 'https://github.com/diegood12/mapa-covid-br'
+        link: 'https://github.com/dfidalg0/mapa-covid-br'
     },
     {
         title: 'API',
